@@ -5,7 +5,7 @@ import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from "lucide-r
 import { Button } from "../ui/button";
 import { cn } from "@/utils";
 
-const HEADER_BLOCK_HEIGHT = 44;
+const HEADER_BLOCK_HEIGHT = 40;
 
 export interface GridColumnProps {
   showResizer?: boolean;
@@ -65,10 +65,10 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     >
       {hasToggler && (
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
           onClick={onToggle}
-          className={`border border-neutral-300 cursor-pointer absolute top-2.5 ${togglePosition}`}
+          className={`border !border-neutral-300 absolute top-2 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -97,7 +97,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           )}
           {title && (
             <div
-              className={cn("p-2 flex items-center font-bold whitespace-nowrap", {
+              className={cn("p-2 flex items-center font-semibold whitespace-nowrap text-lg", {
                 "indent-8": isLast,
               })}
               style={{ height: HEADER_BLOCK_HEIGHT }}
