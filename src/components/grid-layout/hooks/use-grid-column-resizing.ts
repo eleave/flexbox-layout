@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalStorageState } from "ahooks";
 
 const MIN_COLUMN_WIDTH = 200;
@@ -32,7 +32,49 @@ export default function useGridColumnResizing(
     storedSizes.map((w, i) => (visibility[i] ? w : COLLAPSED_WIDTH))
   );
 
-  // Keep active widths in sync when visibility or stored sizes change
+  // Track previous visibility to react only to collapse/expand events
+  const prevVisibility = useRef<boolean[]>(visibility);
+  // Remember original widths so they can be restored on expansion
+  const collapsedWidths = useRef<Record<number, number>>({});
+
+  // When visibility changes, redistribute the affected column's width once
+  useEffect(() => {
+    const prev = prevVisibility.current;
+    let updated = false;
+    const nextStored = [...storedSizes];
+
+    for (let i = 0; i < columnCount; i++) {
+      if (prev[i] !== visibility[i]) {
+        updated = true;
+        const neighbor = i < columnCount - 1 ? i + 1 : i - 1;
+
+        if (!visibility[i]) {
+          const original = nextStored[i];
+          collapsedWidths.current[i] = original;
+          const freed = original - COLLAPSED_WIDTH;
+          nextStored[i] = COLLAPSED_WIDTH;
+          if (neighbor >= 0) {
+            nextStored[neighbor] += freed;
+          }
+        } else {
+          const original = collapsedWidths.current[i] ?? availableWidth;
+          const freed = original - COLLAPSED_WIDTH;
+          nextStored[i] = original;
+          if (neighbor >= 0) {
+            nextStored[neighbor] -= freed;
+          }
+          delete collapsedWidths.current[i];
+        }
+      }
+    }
+
+    prevVisibility.current = [...visibility];
+    if (updated) {
+      setStoredSizes(nextStored);
+    }
+  }, [visibility, storedSizes, columnCount, setStoredSizes, availableWidth]);
+
+  // Reflect stored sizes in local state, collapsing columns to the fixed width
   useEffect(() => {
     setSizes(storedSizes.map((w, i) => (visibility[i] ? w : COLLAPSED_WIDTH)));
   }, [storedSizes, visibility]);
