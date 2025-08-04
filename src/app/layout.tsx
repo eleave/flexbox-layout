@@ -30,7 +30,11 @@ export default function RootLayout({
       >
         <header>Header</header>
         <main>
-          <GridLayout />
+          <GridLayout scrollable>
+            <div>Column 1</div>
+            <div>Column 2</div>
+            <div>Column 3</div>
+          </GridLayout>
           {children}
         </main>
         <footer>Footer</footer>
