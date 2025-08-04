@@ -1,26 +1,19 @@
+"use client";
+
 import React, { useCallback } from "react";
 import { useLocalStorageState } from "ahooks";
 
 const MIN_COLUMN_WIDTH = 200;
 
-export default function useGridColumnResizing(
-  name: string,
-  columnCount: number
-) {
-  const defaultValue = Array(columnCount).fill(0);
+export default function useGridColumnResizing(name: string, columnCount: number) {
+  const defaultValue = Array(columnCount).fill(window.innerWidth / columnCount);
 
-  const [sizes = defaultValue, setSizes] = useLocalStorageState<number[]>(
-    `grid-sizes:${name}`,
-    { defaultValue }
-  );
+  const [sizes = defaultValue, setSizes] = useLocalStorageState<number[]>(`grid-sizes:${name}`, {
+    defaultValue,
+  });
 
   const startResize = useCallback(
-    (
-      index: number,
-      startWidth: number,
-      nextStartWidth: number,
-      startEvent: React.MouseEvent
-    ) => {
+    (index: number, startWidth: number, nextStartWidth: number, startEvent: React.MouseEvent) => {
       const startX = startEvent.clientX;
 
       function onMouseMove(e: MouseEvent) {
@@ -41,10 +34,10 @@ export default function useGridColumnResizing(
         }
 
         setSizes((prev = defaultValue) => {
-          const next = [
-            ...prev,
-            ...Array(Math.max(columnCount - prev.length, 0)).fill(0),
-          ].slice(0, columnCount);
+          const next = [...prev, ...Array(Math.max(columnCount - prev.length, 0)).fill(0)].slice(
+            0,
+            columnCount
+          );
           next[index] = newWidth;
           if (index + 1 < columnCount) {
             next[index + 1] = newNextWidth;
@@ -66,4 +59,3 @@ export default function useGridColumnResizing(
 
   return [sizes, startResize] as const;
 }
-

@@ -3,6 +3,7 @@
 import React from "react";
 import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from "lucide-react";
 import { Button } from "../ui/button";
+import { cn } from "@/utils";
 
 const HEADER_BLOCK_HEIGHT = 44;
 
@@ -46,12 +47,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     Icon = collapsed ? PanelLeft : PanelLeftClose;
   }
 
-  let togglePosition;
-  if (collapsed) {
-    togglePosition = isLast ? "left-0" : "right-0";
-  } else {
-    togglePosition = isLast ? "-left-3" : "-right-3";
-  }
+  const togglePosition = isLast ? "left-2" : "right-2";
 
   const borderClass = isFirst ? "" : "border-l border-neutral-300";
 
@@ -62,7 +58,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className={`absolute top-0 ${togglePosition}`}
+          className={`border border-neutral-300 cursor-pointer absolute top-2.5 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -76,7 +72,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
       {collapsed ? (
         title ? (
           <div
-            className="flex flex-1 items-center justify-center text-sm"
+            className="px-12 uppercase flex flex-1 items-center justify-start text-sm"
             style={{ writingMode: "vertical-rl" }}
           >
             {title}
@@ -84,13 +80,22 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
         ) : null
       ) : (
         <>
-          {actions && <div style={{ height: HEADER_BLOCK_HEIGHT }}>{actions}</div>}
+          {actions && (
+            <div className="p-2" style={{ height: HEADER_BLOCK_HEIGHT }}>
+              {actions}
+            </div>
+          )}
           {title && (
-            <div className="font-bold whitespace-nowrap" style={{ height: HEADER_BLOCK_HEIGHT }}>
+            <div
+              className={cn("p-2 flex items-center font-bold whitespace-nowrap", {
+                "indent-8": isLast,
+              })}
+              style={{ height: HEADER_BLOCK_HEIGHT }}
+            >
               {title}
             </div>
           )}
-          <div className="overflow-y-auto" style={{ height: contentHeight }}>
+          <div className="overflow-y-auto p-2" style={{ height: contentHeight }}>
             {children}
           </div>
         </>
