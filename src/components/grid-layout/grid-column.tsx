@@ -69,7 +69,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
       )}
       {showResizer && !collapsed && (
         <div
-          className="absolute top-0 -right-0.5 z-10 h-full w-1 cursor-col-resize bg-transparent hover:bg-gray-300"
+          className="absolute top-0 -right-0.5 z-10 h-full w-1 cursor-col-resize select-none bg-transparent hover:bg-gray-300"
           onMouseDown={onResizeStart}
         />
       )}

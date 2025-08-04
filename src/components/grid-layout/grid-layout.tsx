@@ -37,7 +37,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
 
   return (
     <div
-      className="grid"
+      className="grid w-full"
       style={{
         height,
         gridTemplateColumns: templateColumns,
