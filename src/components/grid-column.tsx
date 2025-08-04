@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import {
   PanelLeft,
@@ -15,6 +15,8 @@ interface GridColumnProps {
   title?: string;
   actions?: React.ReactNode;
   isLast?: boolean;
+  collapsed?: boolean;
+  onToggle?: () => void;
 }
 
 export default function GridColumn({
@@ -23,15 +25,13 @@ export default function GridColumn({
   title,
   actions,
   isLast = false,
+  collapsed = false,
+  onToggle,
 }: GridColumnProps) {
-  const [collapsed, setCollapsed] = useState(false);
-
   const headerHeight =
     (actions ? HEADER_BLOCK_HEIGHT : 0) +
     (title ? HEADER_BLOCK_HEIGHT : 0);
   const contentHeight = `calc(100% - ${headerHeight}px)`;
-
-  const handleToggle = () => setCollapsed(!collapsed);
 
   const Icon = isLast
     ? collapsed
@@ -47,7 +47,7 @@ export default function GridColumn({
         <Button
           variant="ghost"
           size="icon"
-          onClick={handleToggle}
+          onClick={onToggle}
           className={`absolute top-0 ${isLast ? "-left-3" : "-right-3"}`}
         >
           <Icon className="h-4 w-4" />
