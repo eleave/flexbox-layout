@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalStorageState } from "ahooks";
-import { COLLAPSED_WIDTH } from "./constants";
+import { COLLAPSED_WIDTH, MIN_COLUMN_WIDTH } from "./constants";
 
 export default function useGridColumnWidths(
   name: string,
@@ -47,9 +47,18 @@ export default function useGridColumnWidths(
           if (neighbor >= 0) nextStored[neighbor] += freed;
         } else {
           const original = collapsedWidths.current[i] ?? availableWidth;
-          const freed = original - COLLAPSED_WIDTH;
-          nextStored[i] = original;
-          if (neighbor >= 0) nextStored[neighbor] -= freed;
+          const restored = Math.max(original, MIN_COLUMN_WIDTH);
+          const freed = restored - COLLAPSED_WIDTH;
+          nextStored[i] = restored;
+          if (neighbor >= 0) {
+            const neighborMin = visibility[neighbor]
+              ? MIN_COLUMN_WIDTH
+              : COLLAPSED_WIDTH;
+            nextStored[neighbor] = Math.max(
+              nextStored[neighbor] - freed,
+              neighborMin
+            );
+          }
           delete collapsedWidths.current[i];
         }
       }
