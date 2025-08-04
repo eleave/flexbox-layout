@@ -7,6 +7,8 @@ import {
   PanelRightClose,
 } from "./icons";
 
+const HEADER_BLOCK_HEIGHT = 44;
+
 interface GridColumnProps {
   children: React.ReactNode;
   hasToggler?: boolean;
@@ -26,7 +28,9 @@ export default function GridColumn({
   collapsed = false,
   onToggle,
 }: GridColumnProps) {
-  const headerHeight = (actions ? 24 : 0) + (title ? 24 : 0);
+  const headerHeight =
+    (actions ? HEADER_BLOCK_HEIGHT : 0) +
+    (title ? HEADER_BLOCK_HEIGHT : 0);
   const contentHeight = `calc(100% - ${headerHeight}px)`;
 
   const Icon = isLast
@@ -51,9 +55,16 @@ export default function GridColumn({
       )}
       {!collapsed && (
         <>
-          {actions && <div className="h-6">{actions}</div>}
+          {actions && (
+            <div style={{ height: HEADER_BLOCK_HEIGHT }}>{actions}</div>
+          )}
           {title && (
-            <div className="h-6 font-bold whitespace-nowrap">{title}</div>
+            <div
+              className="font-bold whitespace-nowrap"
+              style={{ height: HEADER_BLOCK_HEIGHT }}
+            >
+              {title}
+            </div>
           )}
           <div className="overflow-y-auto" style={{ height: contentHeight }}>
             {children}
