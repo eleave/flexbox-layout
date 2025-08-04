@@ -49,7 +49,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     Icon = collapsed ? PanelLeft : PanelLeftClose;
   }
 
-  const togglePosition = isLast ? "left-2" : "right-2";
+  const togglePosition = isLast ? "left-3" : "right-3";
 
   const borderClass = isFirst ? "" : "border-l border-neutral-300";
 
@@ -68,7 +68,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           variant="outline"
           size="icon"
           onClick={onToggle}
-          className={`border !border-neutral-300 absolute top-2 ${togglePosition}`}
+          className={`border !border-neutral-300 absolute top-3 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -91,13 +91,13 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
       ) : (
         <>
           {actions && (
-            <div className="p-2" style={{ height: HEADER_BLOCK_HEIGHT }}>
+            <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
               {actions}
             </div>
           )}
           {title && (
             <div
-              className={cn("p-2 flex items-center font-semibold whitespace-nowrap text-lg", {
+              className={cn("p-3 flex items-center font-semibold whitespace-nowrap text-lg", {
                 "indent-8": isLast,
               })}
               style={{ height: HEADER_BLOCK_HEIGHT }}
@@ -105,7 +105,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
               {title}
             </div>
           )}
-          <div className="overflow-y-auto p-2" style={{ height: contentHeight }}>
+          <div className="overflow-y-auto p-3" style={{ height: contentHeight }}>
             {children}
           </div>
         </>
