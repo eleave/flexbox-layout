@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/utils";
 
 const HEADER_BLOCK_HEIGHT = 40;
+const BORDER_COLOR = "border-neutral-300";
 
 export interface GridColumnProps {
   showResizer?: boolean;
@@ -20,6 +21,7 @@ export interface GridColumnProps {
   onToggle?: () => void;
   className?: string;
   isResizing?: boolean;
+  scrollable?: boolean;
 }
 
 export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(function GridColumn(
@@ -36,12 +38,10 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     showResizer = false,
     onResizeStart,
     isResizing = false,
+    scrollable = true,
   },
   ref
 ) {
-  const headerHeight = (actions ? HEADER_BLOCK_HEIGHT : 0) + (title ? HEADER_BLOCK_HEIGHT : 0);
-  const contentHeight = `calc(100% - ${headerHeight}px)`;
-
   let Icon;
   if (isLast) {
     Icon = collapsed ? PanelRight : PanelRightClose;
@@ -51,13 +51,13 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
 
   const togglePosition = isLast ? "left-2" : "right-2";
 
-  const borderClass = isFirst ? "" : "border-l border-neutral-300";
+  const borderClass = isFirst ? "" : `border-l ${BORDER_COLOR}`;
 
   return (
     <div
       ref={ref}
       className={cn(
-        "relative flex h-full flex-col",
+        "relative flex h-full min-h-0 flex-col",
         !isResizing && "transition-[width] duration-300",
         borderClass,
         className
@@ -68,7 +68,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           variant="outline"
           size="icon"
           onClick={onToggle}
-          className={`border !border-neutral-300 absolute top-2 ${togglePosition}`}
+          className={`border !${BORDER_COLOR} absolute top-2 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -97,15 +97,24 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           )}
           {title && (
             <div
-              className={cn("p-2 flex items-center font-semibold whitespace-nowrap text-lg", {
-                "indent-8": isLast,
-              })}
+              className={cn(
+                "p-2 flex items-center font-semibold whitespace-nowrap text-lg border-b",
+                BORDER_COLOR,
+                {
+                  "indent-8": isLast,
+                }
+              )}
               style={{ height: HEADER_BLOCK_HEIGHT }}
             >
               {title}
             </div>
           )}
-          <div className="overflow-y-auto p-2" style={{ height: contentHeight }}>
+          <div
+            className={cn(
+              "flex-1 p-2",
+              scrollable && "overflow-y-auto min-h-0"
+            )}
+          >
             {children}
           </div>
         </>
