@@ -58,10 +58,13 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             onToggle: () => toggle(index),
             showResizer: !isLast,
             onResizeStart: (e: React.MouseEvent) => {
-              const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
-              startResize(index, startWidth, e);
+              const startWidth =
+                columnRefs.current[index]?.getBoundingClientRect().width || 0;
+              const nextStartWidth =
+                columnRefs.current[index + 1]?.getBoundingClientRect().width || 0;
+              startResize(index, startWidth, nextStartWidth, e);
             },
-          },
+          } as unknown as React.ComponentProps<typeof GridColumn>,
           child.props.children
         );
       })}
