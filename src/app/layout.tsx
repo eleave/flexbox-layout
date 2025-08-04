@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import GridLayout from "../components/grid-layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,21 +22,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const blackPanelClassName =
+    "h-10 bg-foreground text-background text-center flex items-center justify-center";
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <header>Header</header>
-        <main>
-          <GridLayout scrollable>
-            <div>Column 1</div>
-            <div>Column 2</div>
-            <div>Column 3</div>
-          </GridLayout>
-          {children}
-        </main>
-        <footer>Footer</footer>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <header className={blackPanelClassName}>Header</header>
+        <main>{children}</main>
+        <footer className={blackPanelClassName}>Footer</footer>
       </body>
     </html>
   );

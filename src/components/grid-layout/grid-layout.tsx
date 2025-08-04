@@ -1,30 +1,27 @@
 "use client";
 
 import React, { useRef } from "react";
-import useGridColumnVisibility from "../hooks/use-grid-column-visibility";
-import useGridColumnResizing from "../hooks/use-grid-column-resizing";
-import type GridColumn, { GridColumnProps } from "./grid-column";
+import useGridColumnVisibility from "./hooks/use-grid-column-visibility";
+import useGridColumnResizing from "./hooks/use-grid-column-resizing";
+import type { GridColumn } from "./grid-column";
 
 interface GridLayoutProps {
   children: [
     React.ReactElement<GridColumnProps, typeof GridColumn>,
     React.ReactElement<GridColumnProps, typeof GridColumn>,
     React.ReactElement<GridColumnProps, typeof GridColumn>,
-    ...React.ReactElement<GridColumnProps, typeof GridColumn>[],
+    ...React.ReactElement<GridColumnProps, typeof GridColumn>[]
   ];
   height?: string;
   name: string;
   scrollable?: boolean; // allow extra prop used elsewhere
 }
 
-export default function GridLayout({
-  children,
-  name,
-  height = "100vh",
-}: GridLayoutProps) {
-  const childArray = React.Children.toArray(
-    children
-  ) as React.ReactElement<GridColumnProps, typeof GridColumn>[];
+export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps) {
+  const childArray = React.Children.toArray(children) as React.ReactElement<
+    GridColumnProps,
+    typeof GridColumn
+  >[];
   const columnCount = childArray.length;
   if (columnCount < 3) {
     throw new Error("GridLayout requires at least three GridColumn children");
@@ -46,8 +43,7 @@ export default function GridLayout({
       <div
         className="absolute top-0 right-0 z-10 h-full w-1 cursor-col-resize bg-transparent hover:bg-gray-300"
         onMouseDown={(e) => {
-          const startWidth =
-            columnRefs.current[index]?.getBoundingClientRect().width || 0;
+          const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
           startResize(index, startWidth, e);
         }}
       />
