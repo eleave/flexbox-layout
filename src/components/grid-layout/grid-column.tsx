@@ -5,7 +5,7 @@ import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from "lucide-r
 import { Button } from "../ui/button";
 import { cn } from "@/utils";
 
-const HEADER_BLOCK_HEIGHT = 40;
+const HEADER_BLOCK_HEIGHT = 48;
 
 export interface GridColumnProps {
   showResizer?: boolean;
