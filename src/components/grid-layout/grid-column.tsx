@@ -5,7 +5,7 @@ import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from "lucide-r
 import { Button } from "../ui/button";
 import { cn } from "@/utils";
 
-const HEADER_BLOCK_HEIGHT = 40;
+const HEADER_BLOCK_HEIGHT = 48;
 const BORDER_COLOR = "border-neutral-300";
 
 export interface GridColumnProps {
@@ -49,7 +49,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     Icon = collapsed ? PanelLeft : PanelLeftClose;
   }
 
-  const togglePosition = isLast ? "left-2" : "right-2";
+  const togglePosition = isLast ? "left-3" : "right-3";
 
   const borderClass = isFirst ? "" : `border-l ${BORDER_COLOR}`;
 
@@ -68,7 +68,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           variant="outline"
           size="icon"
           onClick={onToggle}
-          className={`border !${BORDER_COLOR} absolute top-2 ${togglePosition}`}
+          className={`border !${BORDER_COLOR} absolute top-3 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -91,14 +91,14 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
       ) : (
         <>
           {actions && (
-            <div className="p-2" style={{ height: HEADER_BLOCK_HEIGHT }}>
+            <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
               {actions}
             </div>
           )}
           {title && (
             <div
               className={cn(
-                "p-2 flex items-center font-semibold whitespace-nowrap text-lg border-b",
+                "p-3 flex items-center font-semibold whitespace-nowrap text-lg border-b",
                 BORDER_COLOR,
                 {
                   "indent-8": isLast,
@@ -111,7 +111,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
           )}
           <div
             className={cn(
-              "flex-1 p-2",
+              "flex-1 p-3",
               scrollable && "overflow-y-auto min-h-0"
             )}
           >

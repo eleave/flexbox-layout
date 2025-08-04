@@ -14,12 +14,12 @@ export default function Home() {
         hasToggler
       >
         <div className="space-y-3">
-          <p>
+          <p className="text-sm">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam recusandae suscipit
             omnis delectus placeat, accusamus, doloribus totam dolorem atque nemo fuga praesentium
             dicta, alias ipsum reprehenderit qui commodi deserunt fugit.
           </p>
-          <p>
+          <p className="text-sm">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus error accusantium
             animi, earum at dolorem distinctio quidem assumenda corporis explicabo in enim nemo,
             dolorum, quis possimus doloribus! Quasi, placeat at!
@@ -32,9 +32,11 @@ export default function Home() {
         quaerat, pariatur et accusantium soluta totam mollitia?
       </GridColumn>
       <GridColumn title="History" hasToggler>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas alias asperiores quam
-        deleniti dolore dicta maiores eaque molestiae dolorum odio quod veritatis explicabo quis,
-        vel fugit labore! Expedita, rem aliquid.
+        <p className="text-sm">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas alias asperiores quam
+          deleniti dolore dicta maiores eaque molestiae dolorum odio quod veritatis explicabo quis,
+          vel fugit labore! Expedita, rem aliquid.
+        </p>
       </GridColumn>
     </GridLayout>
   );
