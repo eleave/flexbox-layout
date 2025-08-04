@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import useGridColumnVisibility from "./hooks/use-grid-column-visibility";
 import useGridColumnResizing from "./hooks/use-grid-column-resizing";
 import type { GridColumn, GridColumnProps } from "./grid-column";
+import { cn } from "@/utils";
 
 interface GridLayoutProps {
   children: [
@@ -27,7 +28,11 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
     throw new Error("GridLayout requires at least three GridColumn children");
   }
   const [visibility, toggle] = useGridColumnVisibility(name, columnCount);
-  const [widths, startResize] = useGridColumnResizing(name, columnCount);
+  const [widths, startResize, isResizing] = useGridColumnResizing(
+    name,
+    columnCount,
+    visibility
+  );
   const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const templateColumns = widths
@@ -37,7 +42,10 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
 
   return (
     <div
-      className="grid w-full"
+      className={cn(
+        "grid w-full",
+        !isResizing && "transition-[grid-template-columns] duration-300"
+      )}
       style={{
         height,
         gridTemplateColumns: templateColumns,
@@ -56,7 +64,8 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             isFirst,
             collapsed: !visibility[index],
             onToggle: () => toggle(index),
-            showResizer: !isLast,
+            showResizer: !isLast && visibility[index] && visibility[index + 1],
+            isResizing,
             onResizeStart: (e: React.MouseEvent) => {
               const startWidth =
                 columnRefs.current[index]?.getBoundingClientRect().width || 0;

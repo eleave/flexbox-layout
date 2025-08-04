@@ -19,6 +19,7 @@ export interface GridColumnProps {
   collapsed?: boolean;
   onToggle?: () => void;
   className?: string;
+  isResizing?: boolean;
 }
 
 export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(function GridColumn(
@@ -34,6 +35,7 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     className = "",
     showResizer = false,
     onResizeStart,
+    isResizing = false,
   },
   ref
 ) {
@@ -52,7 +54,15 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
   const borderClass = isFirst ? "" : "border-l border-neutral-300";
 
   return (
-    <div ref={ref} className={`relative flex h-full flex-col ${borderClass} ${className}`}>
+    <div
+      ref={ref}
+      className={cn(
+        "relative flex h-full flex-col",
+        !isResizing && "transition-[width] duration-300",
+        borderClass,
+        className
+      )}
+    >
       {hasToggler && (
         <Button
           variant="ghost"
