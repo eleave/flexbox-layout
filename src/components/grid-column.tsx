@@ -41,6 +41,14 @@ export default function GridColumn({
     ? PanelLeft
     : PanelLeftClose;
 
+  const togglePosition = collapsed
+    ? isLast
+      ? "left-0"
+      : "right-0"
+    : isLast
+    ? "-left-3"
+    : "-right-3";
+
   return (
     <div className="relative flex h-full flex-col">
       {hasToggler && (
@@ -48,12 +56,21 @@ export default function GridColumn({
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className={`absolute top-0 ${isLast ? "-left-3" : "-right-3"}`}
+          className={`absolute top-0 ${togglePosition}`}
         >
           <Icon className="h-4 w-4" />
         </Button>
       )}
-      {!collapsed && (
+      {collapsed ? (
+        title ? (
+          <div
+            className="flex flex-1 items-center justify-center text-sm"
+            style={{ writingMode: "vertical-rl" }}
+          >
+            {title}
+          </div>
+        ) : null
+      ) : (
         <>
           {actions && (
             <div style={{ height: HEADER_BLOCK_HEIGHT }}>{actions}</div>
