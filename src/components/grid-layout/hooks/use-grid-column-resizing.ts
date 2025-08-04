@@ -91,6 +91,55 @@ export default function useGridColumnResizing(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnCount, setStoredSizes]);
 
+  const scaleToWindow = useCallback(() => {
+    setStoredSizes((prev = defaultValue) => {
+      const collapsedCount = visibility.filter((v) => !v).length;
+      const prevVisibleTotal = prev.reduce(
+        (sum, w, i) => sum + (visibility[i] ? w : 0),
+        0
+      );
+      const nextVisibleTotal =
+        window.innerWidth - COLLAPSED_WIDTH * collapsedCount;
+      if (prevVisibleTotal <= 0 || prevVisibleTotal === nextVisibleTotal) {
+        return prev;
+      }
+      const scale = nextVisibleTotal / prevVisibleTotal;
+      const next = [...prev];
+      for (let i = 0; i < columnCount; i++) {
+        if (visibility[i]) {
+          next[i] = prev[i] * scale;
+        } else {
+          collapsedWidths.current[i] =
+            (collapsedWidths.current[i] ?? prev[i]) * scale;
+          next[i] = COLLAPSED_WIDTH;
+        }
+      }
+      return next;
+    });
+  }, [columnCount, visibility, setStoredSizes, defaultValue]);
+
+  // Recalculate stored widths once on mount to fit the current window size
+  useEffect(() => {
+    scaleToWindow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Proportionally scale column widths on window resize
+  useEffect(() => {
+    let timeout: number;
+
+    function onResize() {
+      clearTimeout(timeout);
+      timeout = window.setTimeout(scaleToWindow, 100);
+    }
+
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      clearTimeout(timeout);
+    };
+  }, [scaleToWindow]);
+
   const [isResizing, setIsResizing] = useState(false);
 
   const startResize = useCallback(
