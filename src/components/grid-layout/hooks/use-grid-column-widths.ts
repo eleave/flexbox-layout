@@ -4,11 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocalStorageState } from "ahooks";
 import { COLLAPSED_WIDTH, MIN_COLUMN_WIDTH } from "./constants";
 
+/**
+ * Tracks and persists grid column widths while responding to visibility
+ * changes and window resizing.
+ */
 export default function useGridColumnWidths(
   name: string,
   columnCount: number,
   visibility: boolean[]
 ) {
+  // Determine equal width for columns that are currently visible.
   const collapsedCount = visibility.filter((v) => !v).length;
   const availableWidth =
     columnCount - collapsedCount > 0
@@ -17,18 +22,22 @@ export default function useGridColumnWidths(
       : 0;
   const defaultValue = Array(columnCount).fill(availableWidth);
 
+  // Persist widths so they survive page reloads.
   const [storedSizes = defaultValue, setStoredSizes] =
     useLocalStorageState<number[]>(`grid-sizes:${name}`, {
       defaultValue,
     });
 
+  // Apply collapsed width to hidden columns while keeping stored values.
   const [sizes, setSizes] = useState<number[]>(
     storedSizes.map((w, i) => (visibility[i] ? w : COLLAPSED_WIDTH))
   );
 
   const prevVisibility = useRef<boolean[]>(visibility);
+  // Remember original widths so they can be restored when a column expands.
   const collapsedWidths = useRef<Record<number, number>>({});
 
+  // When visibility changes, redistribute space and remember original sizes.
   useEffect(() => {
     const prev = prevVisibility.current;
     const nextStored = [...storedSizes];
@@ -37,15 +46,18 @@ export default function useGridColumnWidths(
     for (let i = 0; i < columnCount; i++) {
       if (prev[i] !== visibility[i]) {
         updated = true;
+        // Choose an adjacent column to absorb any width changes.
         const neighbor = i < columnCount - 1 ? i + 1 : i - 1;
 
         if (!visibility[i]) {
+          // Collapsing: store original width and give excess space to neighbor.
           const original = nextStored[i];
           collapsedWidths.current[i] = original;
           const freed = original - COLLAPSED_WIDTH;
           nextStored[i] = COLLAPSED_WIDTH;
           if (neighbor >= 0) nextStored[neighbor] += freed;
         } else {
+          // Expanding: restore previous width and reclaim space from neighbor.
           const original = collapsedWidths.current[i] ?? availableWidth;
           const restored = Math.max(original, MIN_COLUMN_WIDTH);
           const freed = restored - COLLAPSED_WIDTH;
@@ -68,10 +80,12 @@ export default function useGridColumnWidths(
     if (updated) setStoredSizes(nextStored);
   }, [visibility, storedSizes, columnCount, setStoredSizes, availableWidth]);
 
+  // Sync state with stored sizes whenever visibility changes.
   useEffect(() => {
     setSizes(storedSizes.map((w, i) => (visibility[i] ? w : COLLAPSED_WIDTH)));
   }, [storedSizes, visibility]);
 
+  // Ensure stored array length matches current column count.
   useEffect(() => {
     setStoredSizes((prev = defaultValue) => {
       const next = [
@@ -83,6 +97,7 @@ export default function useGridColumnWidths(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnCount, setStoredSizes]);
 
+  // Scale widths proportionally when the available window size changes.
   const scaleToWindow = useCallback(() => {
     setStoredSizes((prev = defaultValue) => {
       const collapsedCount = visibility.filter((v) => !v).length;
@@ -101,6 +116,7 @@ export default function useGridColumnWidths(
         if (visibility[i]) {
           next[i] = prev[i] * scale;
         } else {
+          // Keep track of original width for collapsed columns while scaling.
           collapsedWidths.current[i] =
             (collapsedWidths.current[i] ?? prev[i]) * scale;
           next[i] = COLLAPSED_WIDTH;
@@ -110,11 +126,13 @@ export default function useGridColumnWidths(
     });
   }, [columnCount, visibility, setStoredSizes, defaultValue]);
 
+  // Initialize widths based on the current window size.
   useEffect(() => {
     scaleToWindow();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Debounced handler to rescale widths when the window is resized.
   useEffect(() => {
     let timeout: number;
 
