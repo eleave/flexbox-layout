@@ -7,10 +7,13 @@ import { Button } from "../ui/button";
 const HEADER_BLOCK_HEIGHT = 44;
 
 export interface GridColumnProps {
+  showResizer?: boolean;
+  onResizeStart?: (e: React.MouseEvent) => void;
   children: React.ReactNode;
   hasToggler?: boolean;
   title?: string;
   actions?: React.ReactNode;
+  isFirst?: boolean;
   isLast?: boolean;
   collapsed?: boolean;
   onToggle?: () => void;
@@ -23,10 +26,13 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     hasToggler = false,
     title,
     actions,
+    isFirst = false,
     isLast = false,
     collapsed = false,
     onToggle,
     className = "",
+    showResizer = false,
+    onResizeStart,
   },
   ref
 ) {
@@ -47,8 +53,10 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
     togglePosition = isLast ? "-left-3" : "-right-3";
   }
 
+  const borderClass = isFirst ? "" : "border-l border-neutral-300";
+
   return (
-    <div ref={ref} className={`relative flex h-full flex-col ${className}`}>
+    <div ref={ref} className={`relative flex h-full flex-col ${borderClass} ${className}`}>
       {hasToggler && (
         <Button
           variant="ghost"
@@ -58,6 +66,12 @@ export const GridColumn = React.forwardRef<HTMLDivElement, GridColumnProps>(func
         >
           <Icon className="h-4 w-4" />
         </Button>
+      )}
+      {showResizer && !collapsed && (
+        <div
+          className="absolute top-0 -right-0.5 z-10 h-full w-1 cursor-col-resize bg-transparent hover:bg-gray-300"
+          onMouseDown={onResizeStart}
+        />
       )}
       {collapsed ? (
         title ? (

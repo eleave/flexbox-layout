@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import useGridColumnVisibility from "./hooks/use-grid-column-visibility";
 import useGridColumnResizing from "./hooks/use-grid-column-resizing";
-import type { GridColumn } from "./grid-column";
+import type { GridColumn, GridColumnProps } from "./grid-column";
 
 interface GridLayoutProps {
   children: [
@@ -35,24 +35,9 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
     .slice(0, columnCount)
     .join(" ");
 
-  function renderResizer(index: number) {
-    if (index === columnCount - 1) {
-      return null;
-    }
-    return (
-      <div
-        className="absolute top-0 right-0 z-10 h-full w-1 cursor-col-resize bg-transparent hover:bg-gray-300"
-        onMouseDown={(e) => {
-          const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
-          startResize(index, startWidth, e);
-        }}
-      />
-    );
-  }
-
   return (
     <div
-      className={`grid gap-4`}
+      className="grid"
       style={{
         height,
         gridTemplateColumns: templateColumns,
@@ -60,6 +45,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
     >
       {childArray.map((child, index) => {
         const isLast = index === columnCount - 1;
+        const isFirst = index === 0;
         return React.cloneElement(
           child,
           {
@@ -67,13 +53,16 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             ref: (el: HTMLDivElement | null) => (columnRefs.current[index] = el),
             className: `${child.props.className ?? ""} relative h-full`,
             isLast,
+            isFirst,
             collapsed: !visibility[index],
             onToggle: () => toggle(index),
+            showResizer: !isLast,
+            onResizeStart: (e: React.MouseEvent) => {
+              const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
+              startResize(index, startWidth, e);
+            },
           },
-          <>
-            {child.props.children}
-            {renderResizer(index)}
-          </>
+          child.props.children
         );
       })}
     </div>
