@@ -3,6 +3,9 @@
 import React, { useCallback, useState } from "react";
 import { COLLAPSED_WIDTH, MIN_COLUMN_WIDTH } from "./constants";
 
+/**
+ * Handles mouse-driven resizing of adjacent grid columns.
+ */
 export default function useGridColumnResizeDrag(
   columnCount: number,
   visibility: boolean[],
@@ -23,10 +26,12 @@ export default function useGridColumnResizeDrag(
       setIsResizing(true);
 
       function onMouseMove(e: MouseEvent) {
+        // Calculate how far the mouse has moved since the drag started.
         let delta = e.clientX - startX;
         let newWidth = startWidth + delta;
         let newNextWidth = nextStartWidth - delta;
 
+        // Respect minimum widths depending on column visibility.
         const minCurrent = visibility[index] ? MIN_COLUMN_WIDTH : COLLAPSED_WIDTH;
         const minNext = visibility[index + 1] ? MIN_COLUMN_WIDTH : COLLAPSED_WIDTH;
 
@@ -42,6 +47,7 @@ export default function useGridColumnResizeDrag(
           newWidth = startWidth + delta;
         }
 
+        // Persist new widths and update live sizes simultaneously.
         setStoredSizes((prev = defaultValue) => {
           const next = [
             ...prev,
