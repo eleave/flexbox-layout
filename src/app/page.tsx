@@ -6,6 +6,7 @@ export default function Home() {
     <GridLayout name="test-layout" scrollable height="calc(100vh - 80px)">
       <GridColumn
         title="Collection"
+        tabs={<div className="text-sm">Tabs</div>}
         actions={
           <Button variant="outline" size="small">
             Add new collection
