@@ -3,15 +3,17 @@
 import React, { useRef } from "react";
 import useGridColumnVisibility from "./hooks/use-grid-column-visibility";
 import useGridColumnResizing from "./hooks/use-grid-column-resizing";
-import type { GridColumn, GridColumnProps } from "./grid-column";
+import { GridColumn } from "./grid-column";
+import { GridColumnBase } from "./grid-column-base";
+import type { GridColumnPublicProps } from "./types";
 import { cn } from "@/utils";
 
 interface GridLayoutProps {
   children: [
-    React.ReactElement<GridColumnProps, typeof GridColumn>,
-    React.ReactElement<GridColumnProps, typeof GridColumn>,
-    React.ReactElement<GridColumnProps, typeof GridColumn>,
-    ...React.ReactElement<GridColumnProps, typeof GridColumn>[]
+    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
+    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
+    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
+    ...React.ReactElement<GridColumnPublicProps, typeof GridColumn>[]
   ];
   height?: string;
   name: string;
@@ -20,7 +22,7 @@ interface GridLayoutProps {
 
 export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps) {
   const childArray = React.Children.toArray(children) as React.ReactElement<
-    GridColumnProps,
+    GridColumnPublicProps,
     typeof GridColumn
   >[];
   const columnCount = childArray.length;
@@ -54,27 +56,28 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
       {childArray.map((child, index) => {
         const isLast = index === columnCount - 1;
         const isFirst = index === 0;
-        return React.cloneElement(
-          child,
-          {
-            key: index,
-            ref: (el: HTMLDivElement | null) => (columnRefs.current[index] = el),
-            className: `${child.props.className ?? ""} relative h-full`,
-            isLast,
-            isFirst,
-            collapsed: !visibility[index],
-            onToggle: () => toggle(index),
-            showResizer: !isLast && visibility[index] && visibility[index + 1],
-            isResizing,
-            onResizeStart: (e: React.MouseEvent) => {
+        return (
+          <GridColumnBase
+            key={index}
+            ref={(el: HTMLDivElement | null) => (columnRefs.current[index] = el)}
+            {...child.props}
+            className={`${child.props.className ?? ""} relative h-full`}
+            isLast={isLast}
+            isFirst={isFirst}
+            collapsed={!visibility[index]}
+            onToggle={() => toggle(index)}
+            showResizer={!isLast && visibility[index] && visibility[index + 1]}
+            isResizing={isResizing}
+            onResizeStart={(e: React.MouseEvent) => {
               const startWidth =
                 columnRefs.current[index]?.getBoundingClientRect().width || 0;
               const nextStartWidth =
                 columnRefs.current[index + 1]?.getBoundingClientRect().width || 0;
               startResize(index, startWidth, nextStartWidth, e);
-            },
-          } as unknown as React.ComponentProps<typeof GridColumn>,
-          child.props.children
+            }}
+          >
+            {child.props.children}
+          </GridColumnBase>
         );
       })}
     </div>
