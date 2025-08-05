@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const blackPanelClassName =
-    "h-10 bg-foreground text-background text-center flex items-center justify-center";
+    "h-16 bg-foreground text-background text-center flex items-center justify-center";
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

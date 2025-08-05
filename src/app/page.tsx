@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <GridLayout name="test-layout" scrollable height="calc(100vh - 80px)">
+    <GridLayout name="test-layout" scrollable height="calc(100vh - 8rem)">
       <GridColumn
         title="Collection"
         tabs={<div className="text-sm">Tabs</div>}
