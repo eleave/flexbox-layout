@@ -11,7 +11,7 @@ export default function Home() {
             Add new collection
           </Button>
         }
-        hasToggler
+        showToggler
       >
         <div className="space-y-3">
           <p className="text-sm">
@@ -31,7 +31,7 @@ export default function Home() {
         ipsum saepe culpa aperiam minima nobis reiciendis quibusdam, consectetur quasi officiis
         quaerat, pariatur et accusantium soluta totam mollitia?
       </GridColumn>
-      <GridColumn title="History" hasToggler>
+      <GridColumn title="History" showToggler>
         <p className="text-sm">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas alias asperiores quam
           deleniti dolore dicta maiores eaque molestiae dolorum odio quod veritatis explicabo quis,
