@@ -66,49 +66,57 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
             onMouseDown={onResizeStart}
           />
         )}
-        {collapsed ? (
-          title ? (
+        {collapsed &&
+          title && (
             <div
               className="px-12 uppercase flex flex-1 items-center justify-start text-sm"
               style={{ writingMode: "vertical-rl" }}
             >
               {title}
             </div>
-          ) : null
-        ) : (
-          <>
-            {tabs && (
-              <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
-                {tabs}
-              </div>
-            )}
-            {actions && (
-              <div
-                className={cn("p-3", { "text-right": isLast })}
-                style={{ height: HEADER_BLOCK_HEIGHT }}
-              >
-                {actions}
-              </div>
-            )}
-            {title && (
-              <div
-                className={cn(
-                  "p-3 flex items-center font-semibold whitespace-nowrap text-lg border-b",
-                  BORDER_COLOR,
-                  {
-                    "indent-8": isLast && !actions && !tabs,
-                  }
-                )}
-                style={{ height: HEADER_BLOCK_HEIGHT }}
-              >
-                {title}
-              </div>
-            )}
-            <div className={cn("flex-1 p-3", showScroller && "overflow-y-auto min-h-0")}>
-              {children}
+          )}
+        <div
+          className={cn(
+            "flex flex-col flex-1 min-h-0",
+            collapsed && "hidden"
+          )}
+        >
+          {tabs && (
+            <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
+              {tabs}
             </div>
-          </>
-        )}
+          )}
+          {actions && (
+            <div
+              className={cn("p-3", { "text-right": isLast })}
+              style={{ height: HEADER_BLOCK_HEIGHT }}
+            >
+              {actions}
+            </div>
+          )}
+          {title && (
+            <div
+              className={cn(
+                "p-3 flex items-center font-semibold whitespace-nowrap text-lg border-b",
+                BORDER_COLOR,
+                {
+                  "indent-8": isLast && !actions && !tabs,
+                }
+              )}
+              style={{ height: HEADER_BLOCK_HEIGHT }}
+            >
+              {title}
+            </div>
+          )}
+          <div
+            className={cn(
+              "flex-1 p-3",
+              showScroller && "overflow-y-auto min-h-0"
+            )}
+          >
+            {children}
+          </div>
+        </div>
       </div>
     );
   }
