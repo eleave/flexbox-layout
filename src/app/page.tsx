@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-import { GridColumn, GridLayout } from "@/components/grid-layout";
+import {
+  GridColumn,
+  GridLayout,
+  GridColumnTitle,
+  GridColumnActions,
+  GridColumnTabs,
+} from "@/components/grid-layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -12,75 +18,62 @@ export default function Home() {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <GridLayout name="test-layout" scrollable height="calc(100vh - 8rem)">
-        <GridColumn
-          title="Collection"
-          actions={
+        <GridColumn showToggler>
+          <GridColumnTitle>Collection</GridColumnTitle>
+          <GridColumnActions>
             <Button variant="outline" size="sm">
               Add new collection
             </Button>
-          }
-          showToggler
-        >
+          </GridColumnActions>
           <div className="space-y-3">
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam recusandae suscipit
-              omnis delectus placeat, accusamus, doloribus totam dolorem atque nemo fuga praesentium
-              dicta, alias ipsum reprehenderit qui commodi deserunt fugit.
+              The Sun contains about 99.86% of the mass in our solar system, leaving all the planets
+              to share the remaining fraction.
             </p>
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus error accusantium
-              animi, earum at dolorem distinctio quidem assumenda corporis explicabo in enim nemo,
-              dolorum, quis possimus doloribus! Quasi, placeat at!
+              Driving a car to the Moon at highway speeds would take roughly six months of non-stop
+              travel.
             </p>
           </div>
         </GridColumn>
-        <GridColumn
-          className="bg-neutral-50"
-          tabs={
+        <GridColumn className="bg-neutral-50">
+          <GridColumnTabs>
             <TabsList>
               <TabsTrigger value="chat">Chat</TabsTrigger>
               <TabsTrigger value="content">Content</TabsTrigger>
             </TabsList>
-          }
-        >
+          </GridColumnTabs>
           <TabsContent value="chat">
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos nemo ratione
-              distinctio ipsum saepe culpa aperiam minima nobis reiciendis quibusdam, consectetur
-              quasi officiis quaerat, pariatur et accusantium soluta totam mollitia?
+              Neutron stars are so dense that a teaspoon of their material would weigh about six
+              billion tons on Earth.
             </p>
           </TabsContent>
           <TabsContent value="content">
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum corrupti modi dicta,
-              rem in maxime, beatae, explicabo id tenetur molestiae ducimus fuga accusantium porro.
-              Debitis, porro nostrum. Dolor, omnis rerum.
+              Jupiter's magnetic field is powerful enough to produce auroras larger than our entire
+              planet.
             </p>
           </TabsContent>
         </GridColumn>
-        <GridColumn
-          title={activeTab === "chat" ? "History" : "Content"}
-          actions={
-            activeTab === "chat" ? null : (
-              <Button variant="outline" size="sm">
-                Check content
-              </Button>
-            )
-          }
-          showToggler
-        >
+        <GridColumn showToggler>
           <TabsContent value="chat">
+            <GridColumnTitle>History</GridColumnTitle>
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos nemo ratione
-              distinctio ipsum saepe culpa aperiam minima nobis reiciendis quibusdam, consectetur
-              quasi officiis quaerat, pariatur et accusantium soluta totam mollitia?
+              A day on Venus is longer than its year; the planet rotates once every 243 Earth days
+              while orbiting the Sun in 225 days.
             </p>
           </TabsContent>
           <TabsContent value="content">
+            <GridColumnTitle>Content</GridColumnTitle>
+            <GridColumnActions>
+              <Button variant="outline" size="sm">
+                Check content
+              </Button>
+            </GridColumnActions>
             <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum corrupti modi dicta,
-              rem in maxime, beatae, explicabo id tenetur molestiae ducimus fuga accusantium porro.
-              Debitis, porro nostrum. Dolor, omnis rerum.
+              Earth hosts more trees than the Milky Way has stars, with estimates of around three
+              trillion trees worldwide.
             </p>
           </TabsContent>
         </GridColumn>

@@ -57,7 +57,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             className={`${child.props.className ?? ""} relative h-full`}
             isLast={isLast}
             isFirst={isFirst}
-            collapsed={!visibility[index]}
+            isCollapsed={!visibility[index]}
             onToggle={() => toggle(index)}
             showResizer={!isLast && visibility[index] && visibility[index + 1]}
             isResizing={isResizing}

@@ -5,25 +5,23 @@ export interface GridColumnPublicProps {
   showToggler?: boolean;
   /** Enable vertical scrolling within the column */
   showScroller?: boolean;
-  /** Optional title displayed in the column header */
-  title?: string;
-  /** Optional tabs elements rendered above actions */
-  tabs?: React.ReactNode;
-  /** Optional action elements rendered in the header */
-  actions?: React.ReactNode;
   /** Additional class names */
   className?: string;
   /** Column content */
   children: React.ReactNode;
 }
 
-export interface GridColumnInternalProps {
-  onResizeStart?: (e: React.MouseEvent) => void;
+export interface GridColumnBaseProps extends GridColumnPublicProps {
+  /** Is this the first column? */
   isFirst?: boolean;
+  /** Is this the last column? */
   isLast?: boolean;
-  collapsed?: boolean;
+  /** Is the column collapsed? */
+  isCollapsed?: boolean;
+  /** Handler for toggling collapsed state */
   onToggle?: () => void;
+  /** Mouse event handler for starting column resize */
+  onResizeStart?: (e: React.MouseEvent) => void;
+  /** Is the column currently being resized? */
   isResizing?: boolean;
 }
-
-export type GridColumnBaseProps = GridColumnPublicProps & GridColumnInternalProps;
