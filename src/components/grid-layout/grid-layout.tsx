@@ -9,12 +9,7 @@ import type { GridColumnPublicProps } from "./types";
 import { cn } from "@/utils";
 
 interface GridLayoutProps {
-  children: [
-    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
-    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
-    React.ReactElement<GridColumnPublicProps, typeof GridColumn>,
-    ...React.ReactElement<GridColumnPublicProps, typeof GridColumn>[]
-  ];
+  children: React.ReactElement<GridColumnPublicProps, typeof GridColumn>[];
   height?: string;
   name: string;
   scrollable?: boolean; // allow extra prop used elsewhere
@@ -30,11 +25,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
     throw new Error("GridLayout requires at least three GridColumn children");
   }
   const [visibility, toggle] = useGridColumnVisibility(name, columnCount);
-  const [widths, startResize, isResizing] = useGridColumnResizing(
-    name,
-    columnCount,
-    visibility
-  );
+  const [widths, startResize, isResizing] = useGridColumnResizing(name, columnCount, visibility);
   const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const templateColumns = widths
@@ -59,7 +50,9 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
         return (
           <GridColumnBase
             key={index}
-            ref={(el: HTMLDivElement | null) => (columnRefs.current[index] = el)}
+            ref={(el: HTMLDivElement | null) => {
+              columnRefs.current[index] = el;
+            }}
             {...child.props}
             className={`${child.props.className ?? ""} relative h-full`}
             isLast={isLast}
@@ -69,8 +62,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             showResizer={!isLast && visibility[index] && visibility[index + 1]}
             isResizing={isResizing}
             onResizeStart={(e: React.MouseEvent) => {
-              const startWidth =
-                columnRefs.current[index]?.getBoundingClientRect().width || 0;
+              const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
               const nextStartWidth =
                 columnRefs.current[index + 1]?.getBoundingClientRect().width || 0;
               startResize(index, startWidth, nextStartWidth, e);

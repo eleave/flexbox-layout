@@ -55,7 +55,7 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
             variant="outline"
             size="icon"
             onClick={onToggle}
-            className={`border !${BORDER_COLOR} absolute top-3 ${togglePosition}`}
+            className={`absolute top-3 w-6 h-6 ${togglePosition}`}
           >
             <Icon className="h-4 w-4" />
           </Button>
@@ -83,7 +83,10 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
               </div>
             )}
             {actions && (
-              <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
+              <div
+                className={cn("p-3", { "text-right": isLast })}
+                style={{ height: HEADER_BLOCK_HEIGHT }}
+              >
                 {actions}
               </div>
             )}
@@ -93,7 +96,7 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
                   "p-3 flex items-center font-semibold whitespace-nowrap text-lg border-b",
                   BORDER_COLOR,
                   {
-                    "indent-8": isLast,
+                    "indent-8": isLast && !actions && !tabs,
                   }
                 )}
                 style={{ height: HEADER_BLOCK_HEIGHT }}
@@ -101,12 +104,7 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
                 {title}
               </div>
             )}
-            <div
-              className={cn(
-                "flex-1 p-3",
-                showScroller && "overflow-y-auto min-h-0"
-              )}
-            >
+            <div className={cn("flex-1 p-3", showScroller && "overflow-y-auto min-h-0")}>
               {children}
             </div>
           </>
