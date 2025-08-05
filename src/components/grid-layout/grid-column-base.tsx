@@ -15,6 +15,7 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
       children,
       showToggler = false,
       title,
+      tabs,
       actions,
       isFirst = false,
       isLast = false,
@@ -76,6 +77,11 @@ export const GridColumnBase = React.forwardRef<HTMLDivElement, GridColumnBasePro
           ) : null
         ) : (
           <>
+            {tabs && (
+              <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
+                {tabs}
+              </div>
+            )}
             {actions && (
               <div className="p-3" style={{ height: HEADER_BLOCK_HEIGHT }}>
                 {actions}

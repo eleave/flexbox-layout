@@ -7,6 +7,8 @@ export interface GridColumnPublicProps {
   showScroller?: boolean;
   /** Optional title displayed in the column header */
   title?: string;
+  /** Optional tabs elements rendered above actions */
+  tabs?: React.ReactNode;
   /** Optional action elements rendered in the header */
   actions?: React.ReactNode;
   /** Additional class names */
