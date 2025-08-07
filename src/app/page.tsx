@@ -7,7 +7,7 @@ import {
   GridLayout,
   GridColumnTitle,
   GridColumnActions,
-  GridColumnTabs,
+  GridTabs,
 } from "@ui/components/grid-layout";
 import { Button } from "@ui/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/ui/tabs";
@@ -18,6 +18,12 @@ export default function Home() {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <GridLayout name="test-layout" scrollable height="calc(100vh - 8rem)">
+        <GridTabs start={3} end={4}>
+          <TabsList>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+            <TabsTrigger value="content">Content</TabsTrigger>
+          </TabsList>
+        </GridTabs>
         <GridColumn showToggler>
           <GridColumnTitle>Collection</GridColumnTitle>
           <GridColumnActions>
@@ -35,26 +41,6 @@ export default function Home() {
               travel.
             </p>
           </div>
-        </GridColumn>
-        <GridColumn className="bg-neutral-50">
-          <GridColumnTabs>
-            <TabsList>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-            </TabsList>
-          </GridColumnTabs>
-          <TabsContent value="chat">
-            <p className="text-sm">
-              Neutron stars are so dense that a teaspoon of their material would weigh about six
-              billion tons on Earth.
-            </p>
-          </TabsContent>
-          <TabsContent value="content">
-            <p className="text-sm">
-              Jupiter's magnetic field is powerful enough to produce auroras larger than our entire
-              planet.
-            </p>
-          </TabsContent>
         </GridColumn>
         <GridColumn showToggler>
           <TabsContent value="chat">
@@ -74,6 +60,20 @@ export default function Home() {
             <p className="text-sm">
               Earth hosts more trees than the Milky Way has stars, with estimates of around three
               trillion trees worldwide.
+            </p>
+          </TabsContent>
+        </GridColumn>
+        <GridColumn className="bg-neutral-50">
+          <TabsContent value="chat">
+            <p className="text-sm">
+              Neutron stars are so dense that a teaspoon of their material would weigh about six
+              billion tons on Earth.
+            </p>
+          </TabsContent>
+          <TabsContent value="content">
+            <p className="text-sm">
+              Jupiter's magnetic field is powerful enough to produce auroras larger than our entire
+              planet.
             </p>
           </TabsContent>
         </GridColumn>

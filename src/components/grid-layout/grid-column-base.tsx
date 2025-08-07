@@ -26,6 +26,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
       onResizeStart,
       isResizing = false,
       showScroller = true,
+      style,
     },
     ref
   ) {
@@ -60,6 +61,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
             borderClass,
             className
           )}
+          style={style}
         >
           {showToggler && (
             <Button
@@ -80,7 +82,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
           {isCollapsed ? (
             title && (
               <div
-                className="py-12 uppercase flex flex-1 items-center justify-start text-sm"
+                className="px-12 uppercase flex flex-1 items-center justify-start text-sm"
                 style={{ writingMode: "vertical-rl" }}
               >
                 {title}
@@ -107,7 +109,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
                     "p-3 flex items-center font-semibold whitespace-nowrap text-lg border-b",
                     BORDER_COLOR,
                     {
-                      "indent-8": isLast && !actions && !tabs,
+                      "indent-8": showToggler && isLast && !actions && !tabs,
                     }
                   )}
                   style={{ height: HEADER_BLOCK_HEIGHT }}

@@ -1,3 +1,5 @@
+import type React from "react";
+
 export interface GridColumnPublicProps {
   /** Display the column resize handle */
   showResizer?: boolean;
@@ -24,4 +26,6 @@ export interface GridColumnBaseProps extends GridColumnPublicProps {
   onResizeStart?: (e: React.MouseEvent) => void;
   /** Is the column currently being resized? */
   isResizing?: boolean;
+  /** Additional style properties */
+  style?: React.CSSProperties;
 }
