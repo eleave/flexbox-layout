@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useLocalStorageState } from "ahooks";
 
@@ -42,8 +42,41 @@ export default function useGridColumnWidths(
   // Remember original widths so they can be restored when a column expands.
   const collapsedWidths = useRef<Record<number, number>>({});
 
+  // Helper function to find the next visible column
+  const findNextVisibleColumn = useCallback(
+    (startIndex: number, direction: "forward" | "backward" = "forward") => {
+      if (direction === "forward") {
+        for (let i = startIndex + 1; i < columnCount; i++) {
+          if (visibility[i]) {
+            return i;
+          }
+        }
+        // If no visible column found forward, search backward
+        for (let i = startIndex - 1; i >= 0; i--) {
+          if (visibility[i]) {
+            return i;
+          }
+        }
+      } else {
+        for (let i = startIndex - 1; i >= 0; i--) {
+          if (visibility[i]) {
+            return i;
+          }
+        }
+        // If no visible column found backward, search forward
+        for (let i = startIndex + 1; i < columnCount; i++) {
+          if (visibility[i]) {
+            return i;
+          }
+        }
+      }
+      return -1; // No visible column found
+    },
+    [columnCount, visibility]
+  );
+
   // When visibility changes, redistribute space and remember original sizes.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const prev = prevVisibility.current;
     const nextStored = [...storedSizes];
     let updated = false;
@@ -51,27 +84,30 @@ export default function useGridColumnWidths(
     for (let i = 0; i < columnCount; i++) {
       if (prev[i] !== visibility[i]) {
         updated = true;
-        // Choose an adjacent column to absorb any width changes.
-        const neighbor = i < columnCount - 1 ? i + 1 : i - 1;
 
         if (visibility[i]) {
-          // Expanding: restore previous width and reclaim space from neighbor.
+          // Expanding: restore previous width and reclaim space from a visible neighbor.
           const original = collapsedWidths.current[i] ?? availableWidth;
           const restored = Math.max(original, MIN_COLUMN_WIDTH);
           const freed = restored - COLLAPSED_WIDTH;
           nextStored[i] = restored;
+
+          // Find a visible neighbor to reclaim space from
+          const neighbor = findNextVisibleColumn(i);
           if (neighbor >= 0 && neighbor < nextStored.length) {
-            const neighborMin = visibility[neighbor] ? MIN_COLUMN_WIDTH : COLLAPSED_WIDTH;
             const currentNeighborWidth = nextStored[neighbor] ?? 0;
-            nextStored[neighbor] = Math.max(currentNeighborWidth - freed, neighborMin);
+            nextStored[neighbor] = Math.max(currentNeighborWidth - freed, MIN_COLUMN_WIDTH);
           }
           delete collapsedWidths.current[i];
         } else {
-          // Collapsing: store original width and give excess space to neighbor.
+          // Collapsing: store original width and give excess space to a visible neighbor.
           const original = nextStored[i] ?? 0;
           collapsedWidths.current[i] = original;
           const freed = original - COLLAPSED_WIDTH;
           nextStored[i] = COLLAPSED_WIDTH;
+
+          // Find a visible neighbor to give space to
+          const neighbor = findNextVisibleColumn(i);
           if (neighbor >= 0 && neighbor < nextStored.length) {
             const currentNeighborWidth = nextStored[neighbor] ?? 0;
             nextStored[neighbor] = currentNeighborWidth + freed;
@@ -84,7 +120,7 @@ export default function useGridColumnWidths(
     if (updated) {
       setStoredSizes(nextStored);
     }
-  }, [visibility, storedSizes, columnCount, setStoredSizes, availableWidth]);
+  }, [visibility, storedSizes, columnCount, setStoredSizes, availableWidth, findNextVisibleColumn]);
 
   // Sync state with stored sizes whenever visibility changes.
   useEffect(() => {
