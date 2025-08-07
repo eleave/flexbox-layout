@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <GridLayout name="test-layout" scrollable height="calc(100vh - 8rem)">
-        <GridTabs start={2} end={4} height={48}>
+        <GridTabs start={2} end={4}>
           <TabsList>
             <TabsTrigger value="chat">Chat</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>

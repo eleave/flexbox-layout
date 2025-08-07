@@ -11,6 +11,7 @@ import useGridColumnVisibility from "./hooks/use-grid-column-visibility";
 import type { GridColumnPublicProps } from "./types";
 import type { GridTabsProps } from "./grid-tabs";
 import { GridTabs } from "./grid-tabs";
+import { BORDER_COLOR, HEADER_BLOCK_HEIGHT } from "./constants";
 
 interface GridLayoutProps {
   children: React.ReactNode;
@@ -38,7 +39,11 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
   const [widths, startResize, isResizing] = useGridColumnResizing(name, columnCount, visibility);
   const columnRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  const maxTabHeight = tabs.reduce((max, tab) => Math.max(max, tab.props.height), 0);
+  // Determine tallest tab bar to reserve a top grid row when tabs are present
+  const maxTabHeight = tabs.reduce(
+    (max, tab) => Math.max(max, tab.props.height ?? HEADER_BLOCK_HEIGHT),
+    0
+  );
 
   const templateColumns = widths
     .map((w) => (w ? `${w}px` : "1fr"))
@@ -63,9 +68,9 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
           style={{
             gridColumn: `${tab.props.start} / ${tab.props.end}`,
             gridRow: 1,
-            height: `${tab.props.height}px`,
+            height: `${(tab.props.height ?? HEADER_BLOCK_HEIGHT)}px`,
           }}
-          className="w-full"
+          className={cn("w-full border-b", BORDER_COLOR)}
         >
           {tab.props.children}
         </div>
@@ -74,10 +79,13 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
         const isLast = index === columnCount - 1;
         const isFirst = index === 0;
         const columnIndex = index + 1;
+        // Does this column fall beneath any tab's column span?
         const isCovered = tabs.some(
           (tab) =>
             columnIndex >= tab.props.start && columnIndex < tab.props.end
         );
+        // Covered columns start on row 2 under the tabs. Uncovered columns span both
+        // rows so their content fills the full height whether tabs exist or not.
         const gridRow = maxTabHeight
           ? isCovered
             ? 2

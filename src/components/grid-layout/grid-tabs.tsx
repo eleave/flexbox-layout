@@ -7,8 +7,8 @@ export interface GridTabsProps {
   start: number;
   /** Exclusive ending column index */
   end: number;
-  /** Height of the tab bar in pixels */
-  height: number;
+  /** Height of the tab bar in pixels. Defaults to HEADER_BLOCK_HEIGHT. */
+  height?: number;
   /** Tab UI content */
   children: ReactNode;
 }
