@@ -8,9 +8,9 @@ import {
   GridColumnTitle,
   GridColumnActions,
   GridColumnTabs,
-} from "@/components/grid-layout";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@ui/components/grid-layout";
+import { Button } from "@ui/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/ui/tabs";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("chat");

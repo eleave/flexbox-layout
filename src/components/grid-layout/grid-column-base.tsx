@@ -1,16 +1,17 @@
 "use client";
 
-import { forwardRef, ReactNode, useMemo, useState } from "react";
+import { forwardRef, useMemo, useState, type ReactNode } from "react";
 
 import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "@/utils";
-import type { GridColumnBaseProps } from "./types";
+
+import { Button } from "@ui/components/ui/button";
+import { cn } from "@ui/lib/utils";
+
+import { BORDER_COLOR, HEADER_BLOCK_HEIGHT } from "./constants";
 import { GridColumnSlotContext } from "./grid-column-slots";
+import type { GridColumnBaseProps } from "./types";
 
-const HEADER_BLOCK_HEIGHT = 48;
-const BORDER_COLOR = "border-neutral-300";
-
+// eslint-disable-next-line max-lines-per-function
 export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
   function GridColumnBase(
     {
@@ -31,10 +32,11 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
     const [title, setTitle] = useState<ReactNode>(null);
     const [tabs, setTabs] = useState<ReactNode>(null);
     const [actions, setActions] = useState<ReactNode>(null);
+    const [footer, setFooter] = useState<ReactNode>(null);
 
     const slotContext = useMemo(
-      () => ({ setTitle, setActions, setTabs }),
-      [setTitle, setActions, setTabs]
+      () => ({ setTitle, setActions, setTabs, setFooter }),
+      [setTitle, setActions, setTabs, setFooter]
     );
 
     let Icon;
@@ -76,16 +78,14 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
             />
           )}
           {isCollapsed ? (
-            <>
-              {title && (
-                <div
-                  className="px-12 uppercase flex flex-1 items-center justify-start text-sm"
-                  style={{ writingMode: "vertical-rl" }}
-                >
-                  {title}
-                </div>
-              )}
-            </>
+            title && (
+              <div
+                className="py-12 uppercase flex flex-1 items-center justify-start text-sm"
+                style={{ writingMode: "vertical-rl" }}
+              >
+                {title}
+              </div>
+            )
           ) : (
             <>
               {tabs && (
@@ -112,7 +112,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
                   )}
                   style={{ height: HEADER_BLOCK_HEIGHT }}
                 >
-                  {title}
+                  <div className="w-full truncate">{title}</div>
                 </div>
               )}
             </>
@@ -125,6 +125,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
           >
             {children}
           </div>
+          {footer && <div className={cn("p-3 border-t", BORDER_COLOR)}>{footer}</div>}
         </div>
       </GridColumnSlotContext.Provider>
     );

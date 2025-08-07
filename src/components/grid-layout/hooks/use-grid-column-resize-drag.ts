@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
-import { COLLAPSED_WIDTH, MIN_COLUMN_WIDTH } from "./constants";
+import { useCallback, useState } from "react";
+
+import { COLLAPSED_WIDTH, MIN_COLUMN_WIDTH } from "../constants";
 
 /**
  * Handles mouse-driven resizing of adjacent grid columns.
  */
+// eslint-disable-next-line max-lines-per-function
 export default function useGridColumnResizeDrag(
   columnCount: number,
   visibility: boolean[],
@@ -16,12 +18,7 @@ export default function useGridColumnResizeDrag(
   const [isResizing, setIsResizing] = useState(false);
 
   const startResize = useCallback(
-    (
-      index: number,
-      startWidth: number,
-      nextStartWidth: number,
-      startEvent: React.MouseEvent
-    ) => {
+    (index: number, startWidth: number, nextStartWidth: number, startEvent: React.MouseEvent) => {
       const startX = startEvent.clientX;
       setIsResizing(true);
 
@@ -51,8 +48,8 @@ export default function useGridColumnResizeDrag(
         setStoredSizes((prev = defaultValue) => {
           const next = [
             ...prev,
-            ...Array(Math.max(columnCount - prev.length, 0)).fill(0),
-          ].slice(0, columnCount);
+            ...Array.from({ length: Math.max(columnCount - prev.length, 0) }).fill(0),
+          ].slice(0, columnCount) as number[];
           next[index] = newWidth;
           if (index + 1 < columnCount) {
             next[index + 1] = newNextWidth;
@@ -63,8 +60,8 @@ export default function useGridColumnResizeDrag(
         setSizes((prev = defaultValue) => {
           const next = [
             ...prev,
-            ...Array(Math.max(columnCount - prev.length, 0)).fill(0),
-          ].slice(0, columnCount);
+            ...Array.from({ length: Math.max(columnCount - prev.length, 0) }).fill(0),
+          ].slice(0, columnCount) as number[];
           next[index] = newWidth;
           if (index + 1 < columnCount) {
             next[index + 1] = newNextWidth;
@@ -74,13 +71,13 @@ export default function useGridColumnResizeDrag(
       }
 
       function onMouseUp() {
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("mouseup", onMouseUp);
+        globalThis.removeEventListener("mousemove", onMouseMove);
+        globalThis.removeEventListener("mouseup", onMouseUp);
         setIsResizing(false);
       }
 
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mouseup", onMouseUp);
+      globalThis.addEventListener("mousemove", onMouseMove);
+      globalThis.addEventListener("mouseup", onMouseUp);
     },
     [setStoredSizes, setSizes, columnCount, defaultValue, visibility]
   );
