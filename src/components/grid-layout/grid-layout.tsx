@@ -23,18 +23,19 @@ interface GridLayoutProps {
 export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps) {
   const childArray = Children.toArray(children) as Array<React.ReactElement>;
 
-  const tabs = childArray.filter(
-    (child) => child.type === GridTabs
-  ) as Array<React.ReactElement<GridTabsProps, typeof GridTabs>>;
+  const tabs = childArray.filter((child) => child.type === GridTabs) as Array<
+    React.ReactElement<GridTabsProps, typeof GridTabs>
+  >;
 
-  const columns = childArray.filter(
-    (child) => child.type === GridColumn
-  ) as Array<React.ReactElement<GridColumnPublicProps, typeof GridColumn>>;
+  const columns = childArray.filter((child) => child.type === GridColumn) as Array<
+    React.ReactElement<GridColumnPublicProps, typeof GridColumn>
+  >;
 
   const columnCount = columns.length;
   if (columnCount < 3) {
     throw new Error("GridLayout requires at least three GridColumn children");
   }
+
   const [visibility, toggle] = useGridColumnVisibility(name, columnCount);
   const [widths, startResize, isResizing] = useGridColumnResizing(name, columnCount, visibility);
   const columnRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -68,9 +69,9 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
           style={{
             gridColumn: `${tab.props.start} / ${tab.props.end}`,
             gridRow: 1,
-            height: `${(tab.props.height ?? HEADER_BLOCK_HEIGHT)}px`,
+            height: `${tab.props.height ?? HEADER_BLOCK_HEIGHT}px`,
           }}
-          className={cn("w-full border-b", BORDER_COLOR)}
+          className={cn("w-full p-3 border-b border-l border-r", BORDER_COLOR)}
         >
           {tab.props.children}
         </div>
@@ -81,16 +82,11 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
         const columnIndex = index + 1;
         // Does this column fall beneath any tab's column span?
         const isCovered = tabs.some(
-          (tab) =>
-            columnIndex >= tab.props.start && columnIndex < tab.props.end
+          (tab) => columnIndex >= tab.props.start && columnIndex < tab.props.end
         );
         // Covered columns start on row 2 under the tabs. Uncovered columns span both
         // rows so their content fills the full height whether tabs exist or not.
-        const gridRow = maxTabHeight
-          ? isCovered
-            ? 2
-            : "1 / span 2"
-          : 1;
+        const gridRow = maxTabHeight ? (isCovered ? 2 : "1 / span 2") : 1;
         return (
           <GridColumnBase
             key={index}
@@ -106,8 +102,7 @@ export function GridLayout({ children, name, height = "100vh" }: GridLayoutProps
             showResizer={!isLast && visibility[index] && visibility[index + 1]}
             isResizing={isResizing}
             onResizeStart={(e: React.MouseEvent) => {
-              const startWidth =
-                columnRefs.current[index]?.getBoundingClientRect().width || 0;
+              const startWidth = columnRefs.current[index]?.getBoundingClientRect().width || 0;
               const nextStartWidth =
                 columnRefs.current[index + 1]?.getBoundingClientRect().width || 0;
               startResize(index, startWidth, nextStartWidth, e);
