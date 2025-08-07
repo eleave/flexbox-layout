@@ -7,7 +7,7 @@ import {
   GridLayout,
   GridColumnTitle,
   GridColumnActions,
-  GridColumnTabs,
+  GridTabs,
 } from "@ui/components/grid-layout";
 import { Button } from "@ui/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui/components/ui/tabs";
@@ -18,6 +18,12 @@ export default function Home() {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <GridLayout name="test-layout" scrollable height="calc(100vh - 8rem)">
+        <GridTabs start={2} end={4} height={48}>
+          <TabsList>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+            <TabsTrigger value="content">Content</TabsTrigger>
+          </TabsList>
+        </GridTabs>
         <GridColumn showToggler>
           <GridColumnTitle>Collection</GridColumnTitle>
           <GridColumnActions>
@@ -37,12 +43,6 @@ export default function Home() {
           </div>
         </GridColumn>
         <GridColumn className="bg-neutral-50">
-          <GridColumnTabs>
-            <TabsList>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-            </TabsList>
-          </GridColumnTabs>
           <TabsContent value="chat">
             <p className="text-sm">
               Neutron stars are so dense that a teaspoon of their material would weigh about six

@@ -71,12 +71,24 @@ Use slot components to structure your column content:
 </GridColumn>
 ```
 
+Add a layout-level tab bar spanning specific columns:
+
+```tsx
+<GridLayout name="my-layout" height="100vh">
+  <GridTabs start={2} end={4} height={48}>
+    {/* Tab UI here */}
+  </GridTabs>
+  {/* Columns go here */}
+</GridLayout>
+```
+
 ### Available Slots
 
 - `GridColumnTitle` - Column header title
 - `GridColumnTabs` - Tab navigation area
 - `GridColumnActions` - Action buttons area
 - `GridColumnFooter` - Footer content area
+- `GridTabs` - Layout-level tab bar spanning multiple columns
 
 ## ⚙️ Configuration
 

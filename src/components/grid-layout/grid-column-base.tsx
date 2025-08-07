@@ -26,6 +26,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
       onResizeStart,
       isResizing = false,
       showScroller = true,
+      style,
     },
     ref
   ) {
@@ -60,6 +61,7 @@ export const GridColumnBase = forwardRef<HTMLDivElement, GridColumnBaseProps>(
             borderClass,
             className
           )}
+          style={style}
         >
           {showToggler && (
             <Button
